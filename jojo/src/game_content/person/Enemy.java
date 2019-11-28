@@ -18,6 +18,7 @@ public abstract class Enemy implements BeImage {
 
     public abstract void move();
     public abstract void attack(ArrayList<Bullet> enemyBarrage);
+    abstract public void update(ArrayList<Bullet> enemyBarrage,int time);
 
     public boolean hitted(ArrayList<Bullet> barrage){
         for(Bullet b:barrage){

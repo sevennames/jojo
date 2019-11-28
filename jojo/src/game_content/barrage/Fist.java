@@ -3,6 +3,8 @@ package game_content.barrage;
 import game_content.Box;
 
 public class Fist extends Bullet {
+    private boolean attacking=false;
+
     public Fist(double x,double y,double dir,int damage){
         this.x=x;
         this.y=y;
@@ -11,8 +13,16 @@ public class Fist extends Bullet {
         hitbox[0]=new Box(x+(screenlength/12)*Math.cos(dir),y+(screenlength/12)*Math.sin(dir),screenlength/12);
         hitbox[1]=new Box(x+(screenlength/6)*Math.cos(dir),y+(screenlength/6)*Math.sin(dir),screenlength/12);
         this.speed=0;
-        this.HP=-1;
+        this.HP=10;
         this.damage=damage;
+    }
+
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
     }
 
     @Override
@@ -28,12 +38,12 @@ public class Fist extends Bullet {
     }
 
     @Override
-    public void move() {//近战替身的弹幕只随角色移动
-
+    public void update(){//根据输入更新
+        return;
     }
 
     @Override
-    public boolean exit() {//不会退出
-        return false;
+    public boolean alive() {//不会退出
+        return this.isAttacking();
     }
 }

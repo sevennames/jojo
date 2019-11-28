@@ -8,7 +8,7 @@ public class Normal_rectanger extends Bullet {
     private  double length;
     private int maxhit;
     private int hittimes=0;
-    public Normal_rectanger(double x,double y,double width,int ratio,double dir,int damage,int HP,int speed,int maxhit){
+    public Normal_rectanger(double x,double y,double width,int ratio,double dir,int damage,int HP,int speed,int maxhit){//为了确保能用一排圆逼近，用宽和长宽比来创建
         this.x=x;
         this.y=y;
         this.dir=dir;
@@ -30,8 +30,10 @@ public class Normal_rectanger extends Bullet {
         this(x,y,width,ratio,dir,20,20,1,1);
     }
     @Override
-    public void reposition(double dir) {
+    protected void reposition(double dir) {
         this.dir=dir;
+        this.x=this.hitbox[this.hitbox.length-1].x;
+        this.y=this.hitbox[this.hitbox.length-1].y;
         position();
     }
 
@@ -47,39 +49,37 @@ public class Normal_rectanger extends Bullet {
         switch (super.atEdge()){
             case "up":
             case "down":
-                this.dir=-dir;
-                position();
+                this.reposition(-dir);
                 break;
             case "left":
             case "right":
-                this.dir=180-dir;
-                position();
+                this.reposition(180-this.dir);
                 break;
-            case "no":
+            case "false":
                 return;
         }
-        hittimes++;
         return;
 
     }
-
-    @Override
-    public void move() {
-        this.x=this.x+speed*Math.cos(dir);
-        this.y=this.y+speed*Math.sin(dir);
-        position();
-        if(super.atEdge()!="no"){
+    public void update(){
+        if(!this.alive()){
+            return;
+        }
+        if(this.atEdge()=="false"){
+            super.update();
+        }else{
             reflect();
+            this.HP-=5;
         }
     }
 
+
     @Override
-    public boolean exit() {
-        if (hittimes >= maxhit) {
-            this.exist=false;
-            return true;
-        } else {
+    public boolean alive() {
+        if(this.outEdge()||this.HP<0){
             return false;
+        }else{
+            return true;
         }
     }
 

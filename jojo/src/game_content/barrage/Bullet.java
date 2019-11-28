@@ -2,27 +2,24 @@ package game_content.barrage;
 
 import game_content.BeImage;
 import game_content.Box;
+import game_content.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class Bullet implements BeImage {
+public abstract class Bullet implements BeImage, GameObject {
     public double x;
     public double y;
     public double dir;
-    final static double screenwidth=200;
-    final static double screenlength=400;
     Box[] hitbox;
     public int speed;
     int damage;
     int HP;
-    public boolean exist=true;
     Image appearance;
 
-    abstract public void reposition(double dir);
+    abstract protected void reposition(double dir);
     abstract protected void position();
-    abstract public void move();
-    abstract public boolean exit();
+    abstract public boolean alive();
 
     public void setbarrage(double x,double y,double dir){
         this.x=x;
@@ -30,17 +27,14 @@ public abstract class Bullet implements BeImage {
         this.dir=dir;
     }
 
-    public int getDamage(){
-        int a=damage;
-        return a;
+
+    public void update(){//更新判定点位置
+        this.x=this.x+speed*Math.cos(dir);
+        this.y=this.y+speed*Math.sin(dir);
+        this.position();
     }
 
-    public Box[] getHitbox(){
-        Box[] a=hitbox;
-        return a;
-    }
-
-    public String atEdge(){
+    protected String atEdge(){
         for(Box edge:this.hitbox){
             if(edge.hit("x",0)){
                 return "left";
@@ -58,7 +52,7 @@ public abstract class Bullet implements BeImage {
         return "false";
     }
 
-    public boolean outEdge(){
+    protected boolean outEdge(){
         for(Box edge:this.hitbox){
             if(screenwidth>edge.x+edge.r && screenlength>edge.y+edge.r && edge.x>edge.r && edge.y>edge.r){
                 return false;
@@ -67,8 +61,50 @@ public abstract class Bullet implements BeImage {
         return true;
     }
 
-    public double ImgAngle(){  //画图时的角度坐标可能和设计使用的角度坐标不同，这个用于转换
+    @Override
+    public int getdamage(){
+        int a=damage;
+        return a;
+    }
+
+    @Override
+    public void toattack(int damage){
+        this.HP-=damage;
+    }
+
+    @Override
+    public boolean behitted(GameObject atk){
+        for(Box body:this.hitbox){
+            for(Box strike:atk.getHitbox()){
+                if(strike.hit(body)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean hit(GameObject to){
+        for(Box body:this.getHitbox()){
+            for(Box hitted:to.getHitbox()){
+                if(body.hit(hitted)){
+                    to.toattack(this.damage);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    protected double ImgAngle(){  //画图时的角度坐标可能和设计使用的角度坐标不同，这个用于转换
         return (this.dir+90)%360;
+    }
+
+    @Override
+    public Box[] getHitbox(){
+        Box[] a=hitbox;
+        return a;
     }
 
     @Override

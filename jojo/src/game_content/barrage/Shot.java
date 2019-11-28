@@ -15,26 +15,20 @@ public class Shot extends Bullet {
     }
     @Override
     public void reposition(double dir) {//远程替身的子弹发射出去之后一直只按原轨道运行，不需要position之类的方法
+        return;
     }
 
     @Override
     protected void position() {
-
+        return;
     }
 
     @Override
-    public void move() {
-        this.x=this.x+speed*Math.cos(dir);
-        this.y=this.y+speed*Math.sin(dir);
-    }
-
-    @Override
-    public boolean exit() {
+    public boolean alive() {
         if(this.outEdge()){
-            this.exist=false;
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }//远程射击型替身
 
 }

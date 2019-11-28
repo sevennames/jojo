@@ -2,6 +2,7 @@ package game_content.person;
 
 import game_content.BeImage;
 import game_content.Box;
+import game_content.GameObject;
 import game_content.barrage.Bullet;
 import game_content.barrage.*;
 import game_content.barrage.Shot;
@@ -11,9 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public abstract class Player implements BeImage {
-    final static double screenwidth=200;
-    final static double screenlength=400;
+public abstract class Player implements BeImage, GameObject {
     public double x;
     public double y;
     public double  dir;
@@ -64,7 +63,29 @@ public abstract class Player implements BeImage {
         return false;
     }
 
+    @Override
+    public boolean behitted(GameObject from) {
+        for(Box atk:from.getHitbox()){
+            if(atk.hit(this.jojo)){
+                this.HP-=from.getdamage();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void toattack(int damage) {
+        this.HP-=damage;
+    }
+
+    @Override
+    public Box[] getHitbox() {
+        return new Box[]{this.jojo};
+    }
+
+    @Override
     public void imagenary(){
 
-    };
+    }
 }
