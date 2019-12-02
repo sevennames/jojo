@@ -6,38 +6,60 @@ import game_content.barrage.Bullet;
 import game_content.barrage.Fist;
 import game_content.barrage.Shot;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Player_far extends Player{
-    public Player_far(double x,double y,int damage){
+    public Player_far(double x,double y,int damage,ArrayList<Bullet> myBullet,ArrayList<Bullet> enemyBullet){
         this.x=x;
         this.y=y;
         this.dir=90;
-        this.attack=new Shot(x,y,dir,damage);
+        this.attackMethod=new Shot(x,y,dir,damage);
+        this.mybarrage=myBullet;
+        this.enemyBarrage=enemyBullet;
+    }
+
+    public void update(String input){//可能要在主程序中判断是远程型还是近身型，远程型替身需要额外调用hit(ArrayList)的函数
+        //move,attack
+        for(Bullet enemyATK:this.enemyBarrage){
+            if(this.behitted(enemyATK)){
+                this.toattack(enemyATK.getdamage());
+            }
+        }
     }
 
     @Override
-    public void move(String dir){
+    public void move(String dir){//得确保不会走出边界
         super.move(dir);
-        this.attack.setbarrage(this.x,this.y,this.dir);
+        this.attackMethod.setbarrage(this.x,this.y,this.dir);
     }
 
     @Override
     public void attack() {
-        barrage.add(new Shot(this.x,this.y,this.dir,this.attack.getdamage()));
+        mybarrage.add(new Shot(this.x,this.y,this.dir,this.attackMethod.getdamage()));
     }
 
-    @Override
-    public void stopAttack() {//远程射击的弹幕的消除是看是否超过了边界，攻击的时候就将attack加入循环中，停止攻击就将attack拿出循环
+
+    public void hit(ArrayList<GameObject> enemy){//不能消弹，所以远程型替身的主角hit判定的是是否击中敌人
+        for(GameObject object:enemy){
+            if(this.hit(object)){
+                object.toattack(this.attackMethod.getdamage());
+            }
+        }
     }
 
     @Override
     public boolean hit(GameObject to) {
-        return true;
+        for(Bullet shot:this.mybarrage){
+            if(shot.hit(to)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public int getdamage() {
-        return this.attack.getdamage();
+        return this.attackMethod.getdamage();
     }
 }

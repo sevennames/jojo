@@ -16,15 +16,15 @@ public abstract class Player implements BeImage, GameObject {
     public double x;
     public double y;
     public double  dir;
-    public int speed;
+    int speed;
     Box jojo=new Box(x,y,2);
     int HP=100;
-    ArrayList<Bullet> barrage;
-    Bullet attack;
+    ArrayList<Bullet> mybarrage;
+    ArrayList<Bullet> enemyBarrage;
+    Bullet attackMethod;
     Image appearance;
 
     public abstract void attack();
-    public abstract void stopAttack();
 
     public void move(double x,double y){
         this.x=x;
@@ -52,22 +52,20 @@ public abstract class Player implements BeImage, GameObject {
         }
     }
 
-    public boolean hitted(ArrayList<Bullet> barrage){
-        for(Bullet b:barrage){
-            for(Box edge : b.getHitbox()){
-                if(edge.hit(this.jojo)){
-                    return true;
-                }
+    public int behitted(ArrayList<Bullet> enemybarrage){
+        int alldamage=0;
+        for(Bullet b:enemybarrage){
+            if(this.behitted(b)&&b.alive()){
+                alldamage+=b.getdamage();
             }
         }
-        return false;
+        return alldamage;
     }
 
     @Override
     public boolean behitted(GameObject from) {
         for(Box atk:from.getHitbox()){
             if(atk.hit(this.jojo)){
-                this.HP-=from.getdamage();
                 return true;
             }
         }
@@ -77,6 +75,9 @@ public abstract class Player implements BeImage, GameObject {
     @Override
     public void toattack(int damage) {
         this.HP-=damage;
+        if(this.HP<0){
+            //添加一个notify函数
+        }
     }
 
     @Override

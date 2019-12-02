@@ -29,9 +29,13 @@ public abstract class Bullet implements BeImage, GameObject {
 
 
     public void update(){//更新判定点位置
+        if(!this.alive()){
+            return;
+        }
         this.x=this.x+speed*Math.cos(dir);
         this.y=this.y+speed*Math.sin(dir);
         this.position();
+        imagenary();
     }
 
     protected String atEdge(){
@@ -54,7 +58,7 @@ public abstract class Bullet implements BeImage, GameObject {
 
     protected boolean outEdge(){
         for(Box edge:this.hitbox){
-            if(screenwidth>edge.x+edge.r && screenlength>edge.y+edge.r && edge.x>edge.r && edge.y>edge.r){
+            if(screenwidth+edge.r>edge.x && screenlength+edge.r>edge.y && edge.x>-edge.r && edge.y>-edge.r){
                 return false;
             }
         }
@@ -90,7 +94,6 @@ public abstract class Bullet implements BeImage, GameObject {
         for(Box body:this.getHitbox()){
             for(Box hitted:to.getHitbox()){
                 if(body.hit(hitted)){
-                    to.toattack(this.damage);
                     return true;
                 }
             }
