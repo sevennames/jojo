@@ -4,16 +4,18 @@ import game_content.BeImage;
 import game_content.Box;
 import game_content.GameObject;
 import game_content.barrage.Bullet;
+import javafx.beans.InvalidationListener;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Observable;
 
-public abstract class Enemy implements BeImage , GameObject {
+public abstract class Enemy extends Observable implements BeImage , GameObject{
     public double x;
     public double y;
     public double dir;
-    boolean alive=true;
-    int Hp;
+    int HP;
     Box dio=new Box(x,y,2);
     Bullet[] attackMethod;
     ArrayList<Bullet> enemyBullets;//敌人的弹幕池的
@@ -24,6 +26,7 @@ public abstract class Enemy implements BeImage , GameObject {
     public abstract void move();
     public abstract void attack();
     abstract public void update(int time);
+    abstract public boolean alive();
 
     public boolean hitted(ArrayList<Bullet> barrage){
         for(Bullet b:barrage){
@@ -42,10 +45,10 @@ public abstract class Enemy implements BeImage , GameObject {
 
     @Override
     public void toattack(int damage) {
-        this.Hp-=damage;
-        if(Hp<0){
-            this.alive=false;
-            //notify
+        this.HP-=damage;
+        if(HP<0){
+            this.setChanged();
+            this.notifyObservers();
         }
 
     }
@@ -53,5 +56,15 @@ public abstract class Enemy implements BeImage , GameObject {
     @Override
     public Box[] getHitbox() {
         return new Box[]{this.dio};
+    }
+
+    @Override
+    public boolean behitted(GameObject from) {
+        for(Box bullet:from.getHitbox()){
+            if(bullet.hit(this.dio)){
+                return true;
+            }
+        }
+        return false;
     }
 }

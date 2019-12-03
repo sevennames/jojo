@@ -6,13 +6,17 @@ import game_content.GameObject;
 import game_content.barrage.Bullet;
 import game_content.barrage.*;
 import game_content.barrage.Shot;
+import javafx.beans.InvalidationListener;
 import javafx.scene.image.Image;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Observable;
 
-public abstract class Player implements BeImage, GameObject {
+public abstract class Player extends Observable implements BeImage, GameObject {
+
+
     public double x;
     public double y;
     public double  dir;
@@ -76,7 +80,8 @@ public abstract class Player implements BeImage, GameObject {
     public void toattack(int damage) {
         this.HP-=damage;
         if(this.HP<0){
-            //添加一个notify函数
+            super.setChanged();
+            this.notifyObservers();
         }
     }
 
@@ -87,6 +92,5 @@ public abstract class Player implements BeImage, GameObject {
 
     @Override
     public void imagenary(){
-
     }
 }

@@ -31,7 +31,8 @@ public class Player_close extends Player{
         }
         this.HP-=this.behitted(this.enemyBarrage);//判断敌人弹幕是否还存在已经放入这个方法里面了
         if(this.HP<0){
-            //notify();
+            this.setChanged();
+            this.notifyObservers();
         }
         this.imagenary();
         this.attacking=false;//每次更新之后回归false，从而一旦停止攻击就不再进行攻击判断
