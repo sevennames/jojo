@@ -19,6 +19,11 @@ public class Enemy_Boss extends Enemy{
     }
 
     @Override
+    public boolean alive() {
+        return false;
+    }
+
+    @Override
     public boolean hit(GameObject to) {
         return false;
     }

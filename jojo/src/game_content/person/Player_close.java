@@ -21,7 +21,9 @@ public class Player_close extends Player{
     }
 
     public void update(String input){//根据输入更新
-        //switch():attack,move；
+        //switch():attack;
+        this.move(input);
+        ((Fist) this.attackMethod).update(this.x,this.y,this.dir);
         if(this.attacking=true){
             for(Bullet enemyATK:enemyBarrage){
                 if(enemyATK.behitted(this.attackMethod)){

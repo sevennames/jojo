@@ -37,9 +37,10 @@ public class Fist extends Bullet {
         hitbox[1]=new Box(x+(screenlength/6)*Math.cos(dir),y+(screenlength/6)*Math.sin(dir),screenlength/12);
     }
 
-    @Override
-    public void update(){//根据输入更新
-        return;
+    public void update(double x,double y,double dir){//根据输入更新
+        this.x=x;
+        this.y=y;
+        this.dir=dir;
     }
 
     @Override
