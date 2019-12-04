@@ -15,17 +15,19 @@ public abstract class Enemy extends Observable implements BeImage , GameObject{
     public double x;
     public double y;
     public double dir;
+    int speed;
     int HP;
+    int age=0;
     Box dio=new Box(x,y,2);
     Bullet[] attackMethod;
-    ArrayList<Bullet> enemyBullets;//敌人的弹幕池的
+    static ArrayList<Bullet> enemyBullets;//敌人的弹幕池
     Player me;//对于玩家的引用，方便实现自机狙一类的功能
     Image appearance;
 
 
     public abstract void move();
     public abstract void attack();
-    abstract public void update(int time);
+    abstract public void update();
     abstract public boolean alive();
 
     public boolean hitted(ArrayList<Bullet> barrage){
@@ -39,7 +41,25 @@ public abstract class Enemy extends Observable implements BeImage , GameObject{
         return false;
     }
 
+    protected double shotdir(){
+        if(this.x==me.x){
+            if(this.y>me.y){
+                return -90;
+            }else{
+                return 90;
+            }
+        }
+        return Math.atan((this.y-me.y)/(this.x-me.x));
+    }
 
+    public static void deleteBullet(){
+        for(Bullet x:enemyBullets){
+            if(!x.alive()){
+                enemyBullets.remove(x);
+            }
+        }
+    }
+    @Override
     public void imagenary(){
     }
 

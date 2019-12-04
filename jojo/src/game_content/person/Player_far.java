@@ -28,6 +28,13 @@ public class Player_far extends Player{
         }
     }
 
+    public void deleteBullet(){
+        for(Bullet x:mybarrage){
+            if(!x.alive()){
+                mybarrage.remove(x);
+            }
+        }
+    }
     @Override
     public void move(String dir){//得确保不会走出边界
         super.move(dir);
