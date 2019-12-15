@@ -14,9 +14,14 @@ public class Enemy_Boss extends Enemy{
     }
 
     @Override
-    public void update(int time) {
+    public void update() {
 
     }
+
+//    @Override
+//    public void update(int time) {
+//
+//    }
 
     @Override
     public boolean alive() {

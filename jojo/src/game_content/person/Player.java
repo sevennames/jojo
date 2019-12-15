@@ -19,8 +19,8 @@ public abstract class Player extends Observable implements BeImage, GameObject {
 
     public double x;
     public double y;
-    public double  dir;
-    int speed;
+    public double dir;
+    int speed = 1;
     Box jojo=new Box(x,y,2);
     int HP=100;
     ArrayList<Bullet> mybarrage;
